@@ -1,0 +1,47 @@
+services:
+
+  db:
+    image: postgres:17-alpine # Using a recent PostgreSQL version, alpine for smaller size
+    container_name: postgres-db
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432 (for external access if needed)
+    environment:
+      POSTGRES_USER: carlib_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: carlib_db
+    volumes:
+      - ./data/db:/var/lib/postgresql/data # Persist database data on host volume
+      - ./carlib.sql:/docker-entrypoint-initdb.d/carlib.sql # Mount your SQL file for initialization
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carlib_user -d carlib_db"] # Check if DB is ready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    container_name: spring-data-jpa-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy # Ensure 'db' service is healthy before starting 'app'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/carlib_db # Connect to 'db' service by name
+      SPRING_DATASOURCE_USERNAME: carlib_user
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+    build:
+      context: .
+      dockerfile: Dockerfile # Or specify a different Dockerfile name if needed
+
+  test:
+    build: 
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      db:
+        condition: service_healthy # Ensure 'db' service is healthy before starting 'app'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/carlib_db # Connect to 'db' service by name
+      SPRING_DATASOURCE_USERNAME: carlib_user
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
