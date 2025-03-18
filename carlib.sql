@@ -60,13 +60,13 @@ DROP TABLE IF EXISTS "categorie_produit";
 
 
 CREATE TABLE "categorie_produit"
-  ("categorie_id" int NOT NULL,
-                      "produit_id" int NOT NULL,
-                                       PRIMARY KEY ("categorie_id",
-                                                    "produit_id"), CONSTRAINT "categorieid"
-   FOREIGN KEY ("categorie_id") REFERENCES "categorie" ("categorie_id") ON DELETE CASCADE ON UPDATE CASCADE,
-                                                                                                    CONSTRAINT "produit_id"
-   FOREIGN KEY ("produit_id") REFERENCES "produit" ("produit_id") ON DELETE CASCADE ON UPDATE CASCADE);
+    ("categorie_id" int NOT NULL,
+                        "produit_id" int NOT NULL,
+                                         PRIMARY KEY ("categorie_id",
+                                                      "produit_id"), CONSTRAINT "categorieid"
+     FOREIGN KEY ("categorie_id") REFERENCES "categorie" ("categorie_id") ON DELETE CASCADE ON UPDATE CASCADE,
+                                                                                                      CONSTRAINT "produit_id"
+     FOREIGN KEY ("produit_id") REFERENCES "produit" ("produit_id") ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- Create index for produit_id in categorie_produit
 
@@ -87,11 +87,11 @@ DROP TABLE IF EXISTS "commentaire";
 
 
 CREATE TABLE "commentaire"
-  ("commentaire_id" SERIAL PRIMARY KEY,
-                                   "contenu" varchar(255) DEFAULT NULL,
-                                                                  "produit_id" int NOT NULL,
-                                                                                   CONSTRAINT "produitid"
-   FOREIGN KEY ("produit_id") REFERENCES "produit" ("produit_id") ON DELETE CASCADE ON UPDATE CASCADE);
+    ("commentaire_id" SERIAL PRIMARY KEY,
+                                     "contenu" varchar(255) DEFAULT NULL,
+                                                                    "produit_id" int NOT NULL,
+                                                                                     CONSTRAINT "produitid"
+     FOREIGN KEY ("produit_id") REFERENCES "produit" ("produit_id") ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- Create index for produit_id in commentaire
 
