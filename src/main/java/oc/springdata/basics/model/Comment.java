@@ -20,7 +20,4 @@ public class Comment {
 
     @Column(name = "contenu")
     private String content;
-
-    @Column(name = "product_id")
-    private int product_id;
 }
